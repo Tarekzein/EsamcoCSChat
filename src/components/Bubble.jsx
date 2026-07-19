@@ -17,8 +17,18 @@ export default function Bubble() {
   }
 
   return (
-    <button type="button" className="esamco-chat-bubble" onClick={toggle} aria-label="فتح المحادثة">
-      {isOpen ? <CloseIcon /> : <ChatIcon />}
+    <button
+      type="button"
+      className={`esamco-chat-bubble ${!isOpen && unreadCount > 0 ? 'esamco-chat-bubble--attention' : ''}`}
+      onClick={toggle}
+      aria-label="فتح المحادثة"
+    >
+      {/* key forces a remount on toggle, which re-triggers the CSS
+          entrance animation below - a quick, cheap cross-fade/pop between
+          the two icons without needing both mounted at once. */}
+      <span className="esamco-chat-bubble-icon" key={isOpen ? 'close' : 'chat'}>
+        {isOpen ? <CloseIcon /> : <ChatIcon />}
+      </span>
       {!isOpen && unreadCount > 0 && <span className="esamco-chat-badge">{unreadCount}</span>}
     </button>
   )

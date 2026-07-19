@@ -3,7 +3,7 @@ const CONVERSATION_KEY = 'esamco_chat_conversation'
 const LAST_ACTIVITY_KEY = 'esamco_chat_last_activity'
 const MESSAGES_KEY = 'esamco_chat_messages'
 
-const INACTIVITY_LIMIT_MS = 12 * 60 * 60 * 1000 // 12 hours
+const INACTIVITY_LIMIT_MS = 6 * 60 * 60 * 1000 // 6 hours
 
 export function touchActivity() {
   localStorage.setItem(LAST_ACTIVITY_KEY, String(Date.now()))

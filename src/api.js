@@ -13,7 +13,6 @@ async function postJson(path, body) {
     headers,
     body: JSON.stringify(body),
   })
-
   if (!response.ok) {
     throw new Error(`Request to ${path} failed: ${response.status}`)
   }

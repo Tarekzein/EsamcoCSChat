@@ -3,8 +3,13 @@ export function ChatIcon(props) {
     <svg viewBox="0 0 24 24" fill="none" width="26" height="26" {...props}>
       <path
         d="M4 12c0-4.42 3.58-8 8-8s8 3.58 8 8-3.58 8-8 8c-1.04 0-2.03-.2-2.94-.55L5 20l1.1-3.66A7.96 7.96 0 0 1 4 12Z"
-        fill="currentColor"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinejoin="round"
       />
+      <circle cx="8.4" cy="12" r="1.15" fill="currentColor" />
+      <circle cx="12" cy="12" r="1.15" fill="currentColor" />
+      <circle cx="15.6" cy="12" r="1.15" fill="currentColor" />
     </svg>
   )
 }
