@@ -8,6 +8,6 @@ export const config = {
   apiBaseUrl: userConfig.apiBaseUrl || 'http://127.0.0.1:8001',
   reverbKey: userConfig.reverbKey || '',
   reverbHost: userConfig.reverbHost || '127.0.0.1',
-  reverbPort: userConfig.reverbPort || 8080,
+  reverbPort: userConfig.reverbPort || 8081,
   reverbScheme: userConfig.reverbScheme || 'http',
 }
