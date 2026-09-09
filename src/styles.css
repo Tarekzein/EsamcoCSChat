@@ -1,0 +1,677 @@
+/* Same font used by the marketing site (esamco-group-Ar+En+Ch) - loaded here
+   too so the widget looks right even on a host page that doesn't already
+   pull in Tajawal (it has to work unmodified on any site it's dropped into). */
+@import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&family=Cinzel:wght@600;700&display=swap');
+
+.esamco-chat-widget {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 999999;
+  direction: rtl;
+  font-family: 'Tajawal', 'Segoe UI', Tahoma, Arial, sans-serif;
+  font-size: 14px;
+  /* ESAMCO Group brand palette - matches the marketing site's :root tokens. */
+  --esamco-navy-950: #050B1A;
+  --esamco-navy-900: #0A1730;
+  --esamco-navy-800: #0F2148;
+  --esamco-navy-700: #152C61;
+  --esamco-royal: #1E5FD9;
+  --esamco-royal-bright: #2E7BFF;
+  --esamco-gold: #D4AF37;
+  --esamco-gold-soft: #E8C765;
+  --esamco-silver: #C9D3E8;
+  --esamco-text: #E7EEFA;
+  --esamco-muted: #8FA2C7;
+  --esamco-line: rgba(201, 211, 232, 0.12);
+  --esamco-card: rgba(15, 33, 72, 0.55);
+  /* Kept for anything still referencing the old names. */
+  --esamco-primary: var(--esamco-royal);
+  --esamco-primary-dark: var(--esamco-navy-800);
+  --esamco-bg: var(--esamco-navy-900);
+}
+
+.esamco-chat-widget * {
+  box-sizing: border-box;
+}
+
+/* Bubble */
+
+.esamco-chat-bubble {
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--esamco-royal) 0%, var(--esamco-royal-bright) 100%);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  cursor: pointer;
+  box-shadow: 0 8px 24px rgba(30, 95, 217, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.esamco-chat-bubble:hover {
+  transform: translateY(-2px) scale(1.03);
+  box-shadow: 0 12px 32px rgba(30, 95, 217, 0.55);
+}
+
+.esamco-chat-bubble:active {
+  transform: translateY(0) scale(0.96);
+}
+
+/* Soft ring that pulses outward while there's an unread message the
+   visitor hasn't opened yet - stops once they open the widget (the
+   --attention modifier is only applied when closed with unreadCount>0). */
+.esamco-chat-bubble--attention::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  box-shadow: 0 0 0 0 rgba(30, 95, 217, 0.55);
+  animation: esamco-bubble-pulse 2.2s ease-out infinite;
+  pointer-events: none;
+}
+
+@keyframes esamco-bubble-pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(30, 95, 217, 0.55);
+  }
+  70% {
+    box-shadow: 0 0 0 14px rgba(30, 95, 217, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(30, 95, 217, 0);
+  }
+}
+
+.esamco-chat-bubble-icon {
+  display: flex;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.15));
+  animation: esamco-bubble-icon-in 0.22s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes esamco-bubble-icon-in {
+  from {
+    opacity: 0;
+    transform: scale(0.5) rotate(-25deg);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+  }
+}
+
+.esamco-chat-badge {
+  position: absolute;
+  top: -4px;
+  left: -4px;
+  background: #ef4444;
+  color: #fff;
+  border-radius: 999px;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 5px;
+  font-size: 11px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 0 2px #fff;
+}
+
+/* Window */
+
+.esamco-chat-window {
+  position: absolute;
+  bottom: 72px;
+  right: 0;
+  width: 340px;
+  height: 500px;
+  background: var(--esamco-navy-900);
+  border: 1px solid var(--esamco-line);
+  border-radius: 18px;
+  box-shadow: 0 16px 48px rgba(5, 11, 26, 0.5), 0 2px 8px rgba(5, 11, 26, 0.3);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  animation: esamco-chat-pop-in 0.18s ease-out;
+  color: var(--esamco-text);
+}
+
+@keyframes esamco-chat-pop-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.esamco-chat-header {
+  background: linear-gradient(135deg, var(--esamco-navy-800) 0%, var(--esamco-royal) 100%);
+  color: #fff;
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+  border-bottom: 1px solid rgba(212, 175, 55, 0.35);
+}
+
+.esamco-chat-header-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: var(--esamco-navy-950);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  overflow: hidden;
+  box-shadow: 0 4px 14px rgba(5, 11, 26, 0.5);
+}
+
+.esamco-chat-header-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.esamco-chat-header-title {
+  display: flex;
+  align-items: baseline;
+  gap: 7px;
+  line-height: 1.2;
+}
+
+.esamco-chat-header-brand-en {
+  font-family: 'Cinzel', serif;
+  font-weight: 700;
+  letter-spacing: 2px;
+  font-size: 14px;
+  color: #fff;
+}
+
+.esamco-chat-header-brand-ar {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--esamco-gold-soft);
+}
+
+.esamco-chat-header-subtitle {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.75);
+  opacity: 1;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 2px;
+}
+
+.esamco-chat-online-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #4ade80;
+  display: inline-block;
+}
+
+.esamco-chat-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+/* Messages */
+
+.esamco-chat-messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.esamco-chat-welcome {
+  background: var(--esamco-card);
+  border: 1px solid var(--esamco-line);
+  color: var(--esamco-silver);
+  border-radius: 12px;
+  padding: 12px 14px;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.esamco-chat-message {
+  padding: 9px 13px;
+  border-radius: 14px;
+  max-width: 85%;
+  line-height: 1.5;
+}
+
+.esamco-chat-message-text {
+  white-space: pre-wrap;
+}
+
+.esamco-chat-attachment-image {
+  display: block;
+  max-width: 100%;
+  max-height: 180px;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+.esamco-chat-attachment-file {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: inherit;
+  text-decoration: none;
+  word-break: break-all;
+}
+
+/* A document the customer is expected to act on needs more than an
+   underlined filename: its name, its size, and - when it is a form we
+   asked them to fill in - the button that sends it back. */
+.esamco-chat-document {
+  display: grid;
+  gap: 8px;
+}
+
+.esamco-chat-document-meta {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.esamco-chat-document-name {
+  font-weight: 700;
+  text-decoration: underline;
+}
+
+.esamco-chat-document-sub {
+  font-size: 10px;
+  font-weight: 700;
+  opacity: 0.65;
+}
+
+.esamco-chat-document-return {
+  display: block;
+  width: 100%;
+  padding: 7px 10px;
+  border: 1px solid currentColor;
+  border-radius: 8px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  opacity: 0.85;
+  transition: opacity 0.15s ease, background-color 0.15s ease;
+}
+
+.esamco-chat-document-return:hover {
+  opacity: 1;
+  background: rgba(255, 255, 255, 0.14);
+}
+
+.esamco-chat-message-label {
+  font-size: 10px;
+  font-weight: 700;
+  opacity: 0.6;
+  margin-bottom: 2px;
+}
+
+.esamco-chat-message-time {
+  font-size: 10px;
+  opacity: 0.55;
+  margin-top: 3px;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  justify-content: flex-end;
+}
+
+.esamco-chat-status-icon {
+  display: inline-flex;
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.esamco-chat-status-icon.read {
+  color: var(--esamco-gold-soft);
+  opacity: 1;
+}
+
+.esamco-chat-message.visitor {
+  align-self: flex-start;
+  background: linear-gradient(135deg, var(--esamco-royal) 0%, var(--esamco-royal-bright) 100%);
+  color: #fff;
+  border-bottom-left-radius: 4px;
+}
+
+.esamco-chat-message.ai {
+  align-self: flex-end;
+  background: var(--esamco-card);
+  border: 1px solid var(--esamco-line);
+  color: var(--esamco-text);
+  border-bottom-right-radius: 4px;
+}
+
+.esamco-chat-message.agent {
+  align-self: flex-end;
+  background: rgba(212, 175, 55, 0.14);
+  border: 1px solid rgba(212, 175, 55, 0.35);
+  color: var(--esamco-gold-soft);
+  border-bottom-right-radius: 4px;
+}
+
+.esamco-chat-message.system {
+  align-self: center;
+  background: transparent;
+  border: 1px dashed var(--esamco-line);
+  color: var(--esamco-muted);
+  font-size: 12px;
+}
+
+/* Typing indicator */
+
+.esamco-chat-typing {
+  align-self: flex-end;
+  background: var(--esamco-card);
+  border: 1px solid var(--esamco-line);
+  border-radius: 14px;
+  border-bottom-right-radius: 4px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 12px 16px;
+}
+
+.esamco-chat-typing span {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--esamco-muted);
+  animation: esamco-chat-bounce 1.2s infinite ease-in-out;
+}
+
+.esamco-chat-typing span:nth-child(2) {
+  animation-delay: 0.15s;
+}
+
+.esamco-chat-typing span:nth-child(3) {
+  animation-delay: 0.3s;
+}
+
+@keyframes esamco-chat-bounce {
+  0%, 60%, 100% {
+    transform: translateY(0);
+    opacity: 0.5;
+  }
+  30% {
+    transform: translateY(-4px);
+    opacity: 1;
+  }
+}
+
+/* Escalation prompt */
+
+.esamco-chat-prompt {
+  align-self: stretch;
+  background: rgba(212, 175, 55, 0.1);
+  border: 1px solid rgba(212, 175, 55, 0.35);
+  border-radius: 14px;
+  padding: 14px;
+  text-align: center;
+  color: var(--esamco-text);
+}
+
+.esamco-chat-prompt-icon {
+  color: var(--esamco-gold);
+  display: flex;
+  justify-content: center;
+  margin-bottom: 6px;
+}
+
+.esamco-chat-prompt-text {
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.esamco-chat-prompt-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+}
+
+/* Buttons */
+
+.esamco-chat-btn {
+  border: none;
+  border-radius: 999px;
+  padding: 8px 18px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  transition: transform 0.1s ease, opacity 0.1s ease;
+}
+
+.esamco-chat-btn:active {
+  transform: scale(0.97);
+}
+
+.esamco-chat-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.esamco-chat-btn.primary {
+  background: linear-gradient(135deg, var(--esamco-royal) 0%, var(--esamco-royal-bright) 100%);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.esamco-chat-btn.secondary {
+  background: var(--esamco-card);
+  border: 1px solid var(--esamco-line);
+  color: var(--esamco-silver);
+}
+
+/* Input row */
+
+.esamco-chat-input-row {
+  display: flex;
+  border-top: 1px solid var(--esamco-line);
+  padding: 10px;
+  gap: 8px;
+  flex-shrink: 0;
+  background: var(--esamco-navy-950);
+}
+
+.esamco-chat-input-row input {
+  flex: 1;
+  background: var(--esamco-navy-800);
+  border: 1px solid var(--esamco-line);
+  border-radius: 999px;
+  padding: 9px 14px;
+  font-size: 14px;
+  color: var(--esamco-text);
+  outline: none;
+  transition: border-color 0.15s ease;
+}
+
+.esamco-chat-input-row input::placeholder {
+  color: var(--esamco-muted);
+}
+
+.esamco-chat-input-row input:focus {
+  border-color: var(--esamco-royal-bright);
+}
+
+.esamco-chat-send-btn {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: none;
+  background: linear-gradient(135deg, var(--esamco-royal) 0%, var(--esamco-royal-bright) 100%);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  transform: scaleX(-1); /* send icon points the right way in RTL */
+}
+
+.esamco-chat-send-btn:active {
+  transform: scaleX(-1) scale(0.93);
+}
+
+.esamco-chat-attach-btn {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: 1px solid var(--esamco-line);
+  background: var(--esamco-card);
+  color: var(--esamco-silver);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.esamco-chat-attach-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.esamco-chat-attachment-error {
+  padding: 0 16px 6px;
+}
+
+/* Lead form */
+
+.esamco-chat-form {
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  overflow-y: auto;
+}
+
+.esamco-chat-form-intro {
+  font-size: 13px;
+  color: var(--esamco-muted);
+  margin: 0 0 4px;
+  line-height: 1.5;
+}
+
+.esamco-chat-form label {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--esamco-silver);
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.esamco-chat-form input,
+.esamco-chat-form select {
+  background: var(--esamco-navy-800);
+  border: 1px solid var(--esamco-line);
+  border-radius: 8px;
+  padding: 9px 12px;
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--esamco-text);
+  outline: none;
+  transition: border-color 0.15s ease;
+}
+
+.esamco-chat-form input::placeholder {
+  color: var(--esamco-muted);
+}
+
+.esamco-chat-form input:focus,
+.esamco-chat-form select:focus {
+  border-color: var(--esamco-royal-bright);
+}
+
+.esamco-chat-form-error {
+  color: #f87171;
+  font-size: 12px;
+}
+
+.esamco-chat-link {
+  background: none;
+  border: 0;
+  padding: 0;
+  font: inherit;
+  color: inherit;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.esamco-chat-form-submit {
+  margin-top: 4px;
+  padding: 11px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.esamco-chat-spinner {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  border-top-color: #fff;
+  animation: esamco-chat-spin 0.7s linear infinite;
+}
+
+@keyframes esamco-chat-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Live chat status */
+
+.esamco-chat-status {
+  font-size: 11px;
+  color: var(--esamco-muted);
+  text-align: center;
+  padding: 6px 0 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.esamco-chat-status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--esamco-muted);
+}
+
+.esamco-chat-status-dot.live {
+  background: #22c55e;
+  box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.2);
+}
+
+.esamco-chat-status-dot.connecting,
+.esamco-chat-status-dot.polling,
+.esamco-chat-status-dot.idle {
+  background: #f59e0b;
+}
